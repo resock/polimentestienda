@@ -12,7 +12,7 @@ class CreateProduct(viewsets.GenericViewSet):
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.create()
+            serializer.save()
             return Response({"status": "Producto Registrado"}, status = status.HTTP_201_CREATED)
 
 

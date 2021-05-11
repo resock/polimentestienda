@@ -1,30 +1,37 @@
 from rest_framework import serializers
-from productos.models import *
 from .models import *
+from usuarios.models import Usuario
 
 
 class SerializerCreateProductoIn(serializers.Serializer):
-   class Meta:
-       model = Productos
-       fields = '__all__'
-
-   def create(self):
-        Productos.objects.CreateProduct(
-            nombreProducto = self.validated_data.get("nombreProducto"),
-            descripcion = self.validated_data.get("descripcion"),
-            precio = self.validated_data.get("precio"),
-            usuario = self.validated_data.get("usuario"),
-        )
+    nombreProducto = serializers.CharField()
+    descripcion = serializers.CharField()
+    precio = serializers.FloatField()
+    usuario_id = serializers.IntegerField()
 
 
-   def update(self, instance, validated_data):
-       instance.nombreProducto = validated_data.get('nombreProducto', instance.nombreProducto)
-       instance.descripcion = validated_data.get('descripcion', instance.descripcion)
-       instance.precio = validated_data.get('precio', instance.precio)
-       instance.usuario = validated_data.get('usuario', instance.usuario)
+    def save(self, **kwargs):
+        Productos.objects.create_product(**self.validated_data)
+
+
+    def update(self, instance, validated_data):
+           instance.nombreProducto = validated_data.get('nombreProducto', instance.nombreProducto)
+           instance.descripcion = validated_data.get('descripcion', instance.descripcion)
+           instance.precio = validated_data.get('precio', instance.precio)
+           instance.usuario = validated_data.get('usuario', instance.usuario)
 
 
 class SerializerCreateProductoOut(serializers.Serializer):
-    class Meta:
-        model = Productos
-        fields = '__all__'
+    id = serializers.ReadOnlyField()
+    nombreProducto = serializers.CharField()
+    descripcion = serializers.CharField()
+    precio = serializers.FloatField()
+    usuario = serializers.SerializerMethodField()
+
+
+    def get_usuario(self, obj: usuario ):
+        try:
+            instance = Usuario.Objects.get(id = obj.usuario_id)
+            return instance.username
+        except:
+            return "No hay usuario"

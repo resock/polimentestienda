@@ -12,8 +12,8 @@ class CreateArea(viewsets.GenericViewSet):
     def create(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.create()
-            return Response({"status": "Producto Registrado"}, status = status.HTTP_201_CREATED)
+            serializer.save()
+            return Response({"status": "Area Registrado"}, status = status.HTTP_201_CREATED)
 
 
     def list(self, request):

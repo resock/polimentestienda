@@ -5,14 +5,14 @@ from usuarios.models import Usuario
 # Create your models here.
 
 class ProductoManager(models.Manager):
-    def create_product(self, nombreProducto, descripcion, precio, usuario):
+    def create_product(self, nombreProducto, descripcion, precio, usuario_id ):
         if not precio:
             raise ValueError('Debe ingresar el precio del producto')
         producto = self.model(
             nombreProducto = nombreProducto,
             descripcion = descripcion,
             precio =precio,
-            usuario= usuario,
+            usuario_id = usuario_id,
         )
         producto.save()
         return producto
@@ -24,7 +24,7 @@ class Productos(models.Model):
     nombreProducto = models.CharField(max_length= 30)
     descripcion = models.CharField(max_length= 100)
     precio = models.FloatField(max_length= 10)
-    usuario = models.ForeignKey(Usuario, related_name= 'usuarios', on_delete= models.SET_NULL,  null= True)
+    usuario = models.ForeignKey(Usuario, on_delete= models.SET_NULL,  null= True)
 
 
     objects = ProductoManager()

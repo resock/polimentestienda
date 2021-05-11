@@ -4,24 +4,22 @@ from .models import *
 
 
 class SerializerCreateAreaIn(serializers.Serializer):
-   class Meta:
-       model = Tienda
-       fields = '__all__'
+    nombreArea = serializers.CharField()
+    users = serializers.ReadOnlyField()
 
-   def create(self):
+    def save(self, **kwargs):
         Tienda.objects.create_area(
-            nombreArea = self.validated_data.get("nombreArea"),
-            user = self.validated_data.get("user"),
+            nombreArea= self.validated_data.get("nombreArea"),
+            user= self.validated_data.get("user"),
         )
 
-
-   def update(self, instance, validated_data):
+    def update(self, instance, validated_data):
        instance.nombreArea = validated_data.get('nombreArea', instance.nombreArea)
        instance.user = validated_data.get('user', instance.user)
 
 
 
 class SerializerCreateAreaOut(serializers.Serializer):
-    class Meta:
-        model = Tienda
-        fields = '__all__'
+    id = serializers.ReadOnlyField()
+    nombreArea = serializers.CharField()
+    users = serializers.ReadOnlyField()

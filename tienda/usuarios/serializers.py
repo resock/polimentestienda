@@ -3,6 +3,7 @@ from .models import *
 
 
 class SerializerCreateUserIn(serializers.Serializer):
+    #usuarios = serializers.StringRelatedField(many=True)
     nombres= serializers.CharField()
     apellidos = serializers.CharField()
     username = serializers.CharField()
@@ -11,7 +12,6 @@ class SerializerCreateUserIn(serializers.Serializer):
     usuario_staff = serializers.BooleanField()
     usuario_admin = serializers.BooleanField()
 
-
     def create(self):
         Usuario.Objects.create_user(
             email= self.validated_data.get("email"),
@@ -19,7 +19,6 @@ class SerializerCreateUserIn(serializers.Serializer):
             apellidos= self.validated_data.get("apellidos"),
             username =  self.validated_data.get("username"),
             password =  self.validated_data.get("password"),
-            usuarios = self.validated_data.get("usuarios"),
 
         )
 
