@@ -1,18 +1,17 @@
 from django.db import models
-from usuarios.models import Usuario
+#from usuarios.models import Usuario
 
 
 # Create your models here.
 
 class ProductoManager(models.Manager):
-    def create_product(self, nombreProducto, descripcion, precio, usuario_id ):
+    def create_product(self, nombreProducto, descripcion, precio):
         if not precio:
             raise ValueError('Debe ingresar el precio del producto')
         producto = self.model(
             nombreProducto = nombreProducto,
             descripcion = descripcion,
             precio =precio,
-            usuario_id = usuario_id,
         )
         producto.save()
         return producto
@@ -24,7 +23,6 @@ class Productos(models.Model):
     nombreProducto = models.CharField(max_length= 30)
     descripcion = models.CharField(max_length= 100)
     precio = models.FloatField(max_length= 10)
-    usuario = models.ForeignKey(Usuario, on_delete= models.SET_NULL,  null= True)
 
 
     objects = ProductoManager()

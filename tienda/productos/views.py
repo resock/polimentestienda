@@ -3,11 +3,14 @@ from rest_framework import viewsets, status
 from .serializers import *
 from .models import *
 from rest_framework.response import Response
+from usuarios.models import Usuario
+
 # Create your views here.
 
 class CreateProduct(viewsets.GenericViewSet):
     serializer_class = SerializerCreateProductoIn
     queryset = Productos.objects.all()
+
 
     def create(self, request):
         serializer = self.serializer_class(data=request.data)

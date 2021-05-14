@@ -1,42 +1,48 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from areatienda.models import Tienda
 
 # Create your models here.
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self, email, nombres, apellidos, username, password=None):
+    def create_user(self, email, nombres, apellidos, username, AreaTienda_id, usuario_staff, usuario_admin, password=None):
         if not email:
             raise ValueError('Deben de ingresar un correo electronico')
         usuario = self.model(
             nombres = nombres,
             apellidos = apellidos,
             username=username,
-            email=self.normalize_email(email)
+            email=self.normalize_email(email),
+            AreaTienda_id = AreaTienda_id,
+            usuario_staff = usuario_staff,
+            usuario_admin = usuario_admin,
         )
         usuario.set_password(password)
         usuario.save(using=self._db)
         return usuario
 
-    def create_superuser(self, nombres, apellidos, username, email, password):
+    def create_superuser(self, nombres, apellidos, username, email, password, AreaTienda_id):
         usuario = self.create_user(
             email,
             nombres = nombres,
             apellidos = apellidos,
             username=username,
-            password=password
+            password=password,
+            AreaTienda_id=AreaTienda_id,
         )
         usuario.usuario_staff = True
         usuario.usuario_admin = True
         usuario.save(using=self._db)
         return usuario
 
-    def create_staffuser(self, nombres, apellidos, username, email, password):
+    def create_staffuser(self, nombres, apellidos, username, email, password, AreaTienda_id):
         usuario = self.create_user(
             email,
             nombres=nombres,
             apellidos=apellidos,
             username=username,
-            password=password
+            password=password,
+            AreaTienda_id = AreaTienda_id
         )
         usuario.usuario_staff = True
         usuario.save(using=self._db)
@@ -53,6 +59,7 @@ class Usuario(AbstractBaseUser):#
     usuario_staff = models.BooleanField(default= False)
     usuario_admin = models.BooleanField(default= False)
     usuario_activo = models.BooleanField(default = True)
+    AreaTienda = models.ForeignKey(Tienda, on_delete =models.SET_NULL, null = True)
 
 
     Objects = UsuarioManager()
